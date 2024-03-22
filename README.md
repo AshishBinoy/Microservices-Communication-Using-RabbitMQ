@@ -1,4 +1,3 @@
-# PES2UG21CS089_PES2UG21CS090_PES2UG21CS099_PES2UG21CS110_InventoryManagementSystem
 # Problem Statement: Microservices Communication Using RabbitMQ
 
 ## Description
