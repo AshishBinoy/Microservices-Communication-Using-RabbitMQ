@@ -56,4 +56,28 @@ Build an inventory management system. The inventory management system aims to ef
 - Test various scenarios to ensure the proper functioning of the inventory management system.
 
 ## Sample file structure:
-![image](https://github.com/AshishBinoy/PES2UG21CS089_PES2UG21CS090_PES2UG21CS099_PES2UG21CS110_InventoryManagementSystem/assets/97509105/986a8600-0d26-4ce3-b420-8365d62bbbba)
+```
+├── <microservices-project-directory>
+    ├── docker-compose.yml
+    ├── producer
+    │   ├── producer.py
+    │   ├── Dockerfile
+    │   └──requirements.txt
+    ├── consumer_one
+    │   ├── healthcheck.py
+    │   ├── Dockerfile
+    │   └──requirements.txt
+    ├── consumer_two
+    │   ├── item_creation.py
+    │   ├── Dockerfile
+    │   └──requirements.txt
+    ├── consumer_three
+    │   ├── stock_management.py
+    │   ├── Dockerfile
+    │   └──requirements.txt
+    ├── consumer_four
+    │   ├── orderproccessing.py
+    │   ├── Dockerfile
+    │   └──requirements.txt
+    └── database_service
+```
