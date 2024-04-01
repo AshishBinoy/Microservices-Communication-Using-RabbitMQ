@@ -1,7 +1,7 @@
 import mysql.connector 
 import pika 
 
-
+# DOES NOT WORK NEED TO FIX
 
 #Creating MySQL Connection 
 mydb = mysql.connector.connect(host = "localhost", user = "root", password = "123456789")
