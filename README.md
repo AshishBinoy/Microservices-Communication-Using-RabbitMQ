@@ -11,6 +11,16 @@ Build an inventory management system. The inventory management system aims to ef
 5. **Containerization:** Containerize the application using Docker to provide consistency and portability across different environments.
 6. **Testing and Documentation:** Conduct thorough testing to ensure the system functions as expected and provide comprehensive documentation for setup, usage, and maintenance.
 
+
+# Technologies Used
+The technologies used in this project include:
+
+- RabbitMQ: A message broker that enables communication between microservices.
+- Docker: A containerization platform used for packaging and deploying the application.
+- Flask: A web framework for building HTTP servers and implementing RESTful APIs.
+- MySQL: A database to store our data.
+
+
 # Sample Flow Diagram
 <p align="center">
   <img src="https://github.com/AshishBinoy/PES2UG21CS089_PES2UG21CS090_PES2UG21CS099_PES2UG21CS110_InventoryManagementSystem/assets/97509105/1afbd63f-72d0-457a-a1e1-d128beed6c65" />

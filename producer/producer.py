@@ -1,8 +1,6 @@
 import pika 
 import sys
 
-
-
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel() 
 channel.exchange_declare(exchange='exchange', exchange_type='direct')
