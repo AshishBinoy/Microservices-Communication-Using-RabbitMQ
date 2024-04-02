@@ -16,8 +16,8 @@ print("MySQL connection established")
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel()
 channel.exchange_declare(exchange='exchange', exchange_type='direct')
-channel.queue_declare(queue='stock')
-channel.queue_bind(exchange='exchange', queue='stock', routing_key='stock')
+channel.queue_declare(queue='item creation')
+channel.queue_bind(exchange='exchange', queue='item creation', routing_key='item creation')
 
 #Callback function
 def callback(ch, method, properties, body):
@@ -29,5 +29,5 @@ def callback(ch, method, properties, body):
     print(f"Item {item_name} added to the inventory")
 
 print("Waiting for messages... press CTRL+C to exit")
-channel.basic_consume(queue='stock', on_message_callback=callback, auto_ack=True)
+channel.basic_consume(queue='item creation', on_message_callback=callback, auto_ack=True)
 channel.start_consuming() 

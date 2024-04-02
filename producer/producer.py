@@ -8,11 +8,11 @@ channel = connection.channel()
 channel.exchange_declare(exchange='exchange', exchange_type='direct')
 
 channel.queue_declare(queue='health check')
-channel.queue_declare(queue='stock')
-channel.queue_declare(queue='order_processing')
+channel.queue_declare(queue='stock management')
+channel.queue_declare(queue='order processing')
 channel.queue_declare(queue='item_creation')
 
-binding_keys = ['health check', 'stock', 'order_processing', 'item_creation']
+binding_keys = ['health check', 'stock management', 'order processing', 'item creation']
 for binding_key in binding_keys:
     channel.queue_bind(exchange='exchange', queue=binding_key, routing_key=binding_key)
 
@@ -27,7 +27,7 @@ if(type == 'health check'):
     channel.basic_publish(exchange='exchange', routing_key=type, body=message)
     print(f"Sent message: {type}:{message}")
 
-elif(type == 'stock'):
+elif(type == 'item creation'):
     item_id = sys.argv[2]
     item_name = sys.argv[3]
     item_price = sys.argv[4]
@@ -35,10 +35,19 @@ elif(type == 'stock'):
     message = f"{item_id}:{item_name}:{item_price}:{item_quantity}"
     channel.basic_publish(exchange='exchange', routing_key=type, body=message)
     print("Sent message:",type,":",message)
-    connection.close()
+ 
+
+elif(type == 'stock management'):
+    operation = sys.argv[2]
+    item_id = sys.argv[3]
+    item_quantity = sys.argv[4]
+    message = f"{operation}:{item_id}:{item_quantity}"
+    channel.basic_publish(exchange='exchange', routing_key = type, body=message)
+    print("Sent message:",type,":",message)
+
     
 
-elif(type == 'order_processing'):
+elif(type == 'order processing'):
     type = sys.argv[1]
     item_id = sys.argv[2]
     item_name = sys.argv[3]
@@ -48,7 +57,8 @@ elif(type == 'order_processing'):
     message = f"{item_id}:{item_name}:{item_price}:{item_quantity}"
     channel.basic_publish(exchange='exchange', routing_key=type, body=message)
     print("Sent message:",type,":",message)
-    connection.close() 
+
+connection.close() 
 
 
 
