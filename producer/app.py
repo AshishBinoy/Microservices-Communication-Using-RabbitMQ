@@ -42,6 +42,24 @@ def read():
 
     return message
 
+@app.route('/insert/<item_name>/<item_price>/<item_quantity>')
+def insert(item_name, item_price, item_quantity):
+    message = f"{item_name}:{item_price}:{item_quantity}"
+
+    # TODO: Add this after RabbitMQ is setup
+    # channel.basic_publish(exchange='exchange', routing_key='item_creation', body=message)
+
+    return message
+
+
+@app.route('/delete/<item_id>')
+def delete(item_id):
+    message = f"{item_id}"
+
+    # TODO: Add this after RabbitMQ is setup
+    # channel.basic_publish(exchange='exchange', routing_key='order_processing', body=message)
+
+    return message  
 
 
 if __name__ == '__main__':

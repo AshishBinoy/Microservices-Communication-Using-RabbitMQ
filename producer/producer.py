@@ -56,7 +56,7 @@ elif(type == 'order processing'):
     channel.basic_publish(exchange='exchange', routing_key=type, body=message)
     print("Sent message:",type,":",message)
 
-connection.close() 
+# connection.close() 
 
 
 
