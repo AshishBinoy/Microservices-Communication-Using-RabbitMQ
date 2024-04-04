@@ -8,7 +8,7 @@ channel.exchange_declare(exchange='exchange', exchange_type='direct')
 channel.queue_declare(queue='health check')
 channel.queue_declare(queue='stock management')
 channel.queue_declare(queue='order processing')
-channel.queue_declare(queue='item_creation')
+channel.queue_declare(queue='item creation')
 
 binding_keys = ['health check', 'stock management', 'order processing', 'item creation']
 for binding_key in binding_keys:
@@ -47,12 +47,12 @@ elif(type == 'stock management'):
 
 elif(type == 'order processing'):
     type = sys.argv[1]
-    item_id = sys.argv[2]
-    item_name = sys.argv[3]
-    item_price = sys.argv[4]
-    item_quantity = sys.argv[5]
+    order_id = sys.argv[2]
+    item_id = sys.argv[3]
+    item_quantity = sys.argv[4]
+    
 
-    message = f"{item_id}:{item_name}:{item_price}:{item_quantity}"
+    message = f"{order_id}:{item_id}:{item_quantity}"
     channel.basic_publish(exchange='exchange', routing_key=type, body=message)
     print("Sent message:",type,":",message)
 
