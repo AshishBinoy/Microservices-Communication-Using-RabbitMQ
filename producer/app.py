@@ -1,69 +1,63 @@
-import flask
-import pika
 
-app = flask.Flask(__name__)
+import pika 
+import sys
 
+connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+channel = connection.channel() 
+channel.exchange_declare(exchange='exchange', exchange_type='direct')
 
-# TODO: Add this after RabbitMQ is setup
-# connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-# channel = connection.channel() 
-# channel.exchange_declare(exchange='exchange', exchange_type='direct')
+channel.queue_declare(queue='health check')
+channel.queue_declare(queue='stock management')
+channel.queue_declare(queue='order processing')
+channel.queue_declare(queue='item_creation')
 
-# channel.queue_declare(queue='healthcheck')
-# channel.queue_declare(queue='read')
-# channel.queue_declare(queue='order_processing')
-# channel.queue_declare(queue='item_creation')
+binding_keys = ['health check', 'stock management', 'order processing', 'item creation']
+for binding_key in binding_keys:
+    channel.queue_bind(exchange='exchange', queue=binding_key, routing_key=binding_key)
 
-# binding_keys = ['healthcheck', 'read', 'order_processing', 'item_creation']
-# for binding_key in binding_keys:
-#     channel.queue_bind(exchange='exchange', queue=binding_key, routing_key=binding_key)
+type = sys.argv[1]
 
+if(type not in binding_keys):
+    print("Invalid type")
+    sys.exit(0)
 
+if(type == 'health check'):
+    message = ''.join(sys.argv[2:])
+    channel.basic_publish(exchange='exchange', routing_key=type, body=message)
+    print(f"Sent message: {type}:{message}")
 
-@app.route('/')
-def home():
-    return "Hello, World"
+elif(type == 'item creation'):
+    item_id = sys.argv[2]
+    item_name = sys.argv[3]
+    item_price = sys.argv[4]
+    item_quantity = sys.argv[5]
+    message = f"{item_id}:{item_name}:{item_price}:{item_quantity}"
+    channel.basic_publish(exchange='exchange', routing_key=type, body=message)
+    print("Sent message:",type,":",message)
+ 
 
-@app.route('/health_check')
-def health_check():
-    message = "Health check message sent"
+elif(type == 'stock management'):
+    operation = sys.argv[2]
+    item_id = sys.argv[3]
+    item_quantity = sys.argv[4]
+    message = f"{operation}:{item_id}:{item_quantity}"
+    channel.basic_publish(exchange='exchange', routing_key = type, body=message)
+    print("Sent message:",type,":",message)
 
-    # TODO: Add this after RabbitMQ is setup
-    # channel.basic_publish(exchange='exchange', routing_key='healthcheck', body=message)
+    
 
-    return message
+elif(type == 'order processing'):
+    type = sys.argv[1]
+    item_id = sys.argv[2]
+    item_name = sys.argv[3]
+    item_price = sys.argv[4]
+    item_quantity = sys.argv[5]
 
-@app.route('/read')
-def read():
-    message = "Message to retrieve all records sent"
+    message = f"{item_id}:{item_name}:{item_price}:{item_quantity}"
+    channel.basic_publish(exchange='exchange', routing_key=type, body=message)
+    print("Sent message:",type,":",message)
 
-    # TODO: Add this after RabbitMQ is setup
-    # channel.basic_publish(exchange='exchange', routing_key='read', body=message)
-
-    return message
-
-@app.route('/insert/<item_name>/<item_price>/<item_quantity>')
-def insert(item_name, item_price, item_quantity):
-    message = f"{item_name}:{item_price}:{item_quantity}"
-
-    # TODO: Add this after RabbitMQ is setup
-    # channel.basic_publish(exchange='exchange', routing_key='item_creation', body=message)
-
-    return message
-
-
-@app.route('/delete/<item_id>')
-def delete(item_id):
-    message = f"{item_id}"
-
-    # TODO: Add this after RabbitMQ is setup
-    # channel.basic_publish(exchange='exchange', routing_key='order_processing', body=message)
-
-    return message  
-
-
-if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+# connection.close() 
 
 
 
