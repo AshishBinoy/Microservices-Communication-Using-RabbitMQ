@@ -1,5 +1,6 @@
 import pika 
 
+
 channel = pika.BlockingConnection(pika.ConnectionParameters('localhost')).channel() 
 channel.exchange_declare(exchange='exchange', exchange_type='direct')
 channel.queue_declare(queue='health check')
