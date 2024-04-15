@@ -6,4 +6,4 @@ COPY . .
 
 RUN pip install -r requirements.txt
 
-CMD ["python", "orderprocessing.py"]    
+CMD ["python", "orderproccessing.py"]    

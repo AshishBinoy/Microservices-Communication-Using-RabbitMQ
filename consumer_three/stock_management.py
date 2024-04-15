@@ -2,7 +2,7 @@ import mysql.connector
 import pika 
 
 #Creating MySQL Connection 
-mydb = mysql.connector.connect(host = "localhost", user = "root", password = "123456789")
+mydb = mysql.connector.connect(host = "mysql", user = "root", password = "123456789")
 cursor = mydb.cursor() 
 cursor.execute("USE Inventory")
 

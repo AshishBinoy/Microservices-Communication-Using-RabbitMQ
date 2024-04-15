@@ -2,7 +2,7 @@ import pika
 import mysql.connector 
 
 #Creating MySQL Connection
-mydb = mysql.connector.connect(host = "localhost", user = "root", password = "123456789")
+mydb = mysql.connector.connect(host = "mysql", user = "root", password = "123456789")
 cursor = mydb.cursor()
 cursor.execute("USE Inventory")
 cursor.execute("CREATE TABLE IF NOT EXISTS Orders(order_id INT AUTO_INCREMENT PRIMARY KEY, item_id INT, item_quantity INT, FOREIGN KEY(item_id) REFERENCES Items(item_id) ON DELETE CASCADE ON UPDATE CASCADE)")

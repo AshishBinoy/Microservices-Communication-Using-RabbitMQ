@@ -1,11 +1,19 @@
 version: '3'
-services:
 
+services:
   rabbitmq:
     image: "rabbitmq:3-management"
     ports:
       - "5672:5672"  # Expose the port 5672 for RabbitMQ
       - "15672:15672"
+
+  mysql:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456789
+      MYSQL_DATABASE: Inventory
+    ports:
+      - "3306:3306"  # Expose the port 3306 for MySQL
 
   producer:
     build: ./producer
@@ -17,7 +25,7 @@ services:
   consumer_one:
     build: ./consumer_one
     volumes:
-      - ./consumer_one:/healthcheck   # Healthcheck folder was createed in the Dockerfile
+      - ./consumer_one:/healthcheck   # Healthcheck folder was created in the Dockerfile
     depends_on:
       - producer
 
@@ -27,6 +35,12 @@ services:
       - ./consumer_two:/item # Item folder was created in the Dockerfile
     depends_on:
       - producer
+    environment:
+      MYSQL_HOST: "mysql"            # MySQL host
+      MYSQL_USER: "root"             # MySQL user
+      MYSQL_PASSWORD: "123456789"      # MySQL password
+      MYSQL_DATABASE: "Inventory"    # MySQL database name
+      RABBITMQ_HOST: "rabbitmq"      # RabbitMQ host
 
   consumer_three:
     build: ./consumer_three
@@ -34,6 +48,12 @@ services:
       - ./consumer_three:/stock # Stock folder was created in the Dockerfile
     depends_on:
       - producer
+    environment:
+      MYSQL_HOST: "mysql"            # MySQL host
+      MYSQL_USER: "root"             # MySQL user
+      MYSQL_PASSWORD: "123456789"      # MySQL password
+      MYSQL_DATABASE: "Inventory"    # MySQL database name
+      RABBITMQ_HOST: "rabbitmq"      # RabbitMQ host
 
   consumer_four:
     build: ./consumer_four
@@ -41,3 +61,9 @@ services:
       - ./consumer_four:/orderprocessing  # Orderprocessing folder was created in the Dockerfile
     depends_on:
       - producer
+    environment:
+      MYSQL_HOST: "mysql"            # MySQL host
+      MYSQL_USER: "root"             # MySQL user
+      MYSQL_PASSWORD: "123456789"      # MySQL password
+      MYSQL_DATABASE: "Inventory"    # MySQL database name
+      RABBITMQ_HOST: "rabbitmq"      # RabbitMQ host
