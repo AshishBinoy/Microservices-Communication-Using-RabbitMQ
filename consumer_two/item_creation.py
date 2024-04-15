@@ -13,7 +13,7 @@ cursor.execute("CREATE TABLE IF NOT EXISTS Items (item_id INT AUTO_INCREMENT PRI
 print("MySQL connection established")
 
 #Creating RabbitMQ Connection
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
 channel = connection.channel()
 channel.exchange_declare(exchange='exchange', exchange_type='direct')
 channel.queue_declare(queue='item creation')

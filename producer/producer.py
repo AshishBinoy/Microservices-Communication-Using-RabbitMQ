@@ -1,10 +1,10 @@
-import flask
+from flask import Flask
 import pika
 
-app = flask.Flask(__name__)
+app = Flask(__name__)
 
 
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
 channel = connection.channel() 
 channel.exchange_declare(exchange='exchange', exchange_type='direct')
 

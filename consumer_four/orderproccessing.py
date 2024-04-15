@@ -10,7 +10,7 @@ mydb.commit()
 
 
 #Creating RabbitMQ Connection
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+connection = pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
 channel = connection.channel()
 channel.exchange_declare(exchange='exchange', exchange_type='direct')
 channel.queue_declare(queue='order processing')
