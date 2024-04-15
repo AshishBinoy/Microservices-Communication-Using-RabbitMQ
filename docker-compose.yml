@@ -13,7 +13,7 @@ services:
       MYSQL_ROOT_PASSWORD: 123456789
       MYSQL_DATABASE: Inventory
     ports:
-      - "3306:3306"  # Expose the port 3306 for MySQL
+      - "3307:3306"  # Expose the port 3306 for MySQL
 
   producer:
     build: ./producer

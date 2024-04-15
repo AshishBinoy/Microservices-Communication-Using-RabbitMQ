@@ -56,6 +56,13 @@ def delete(item_id):
 
     return message  
 
+@app.route('/process_order/<order_id>/<item_id>/<item_quantity>')
+def process_order(order_id, item_id, item_quantity):
+    message = f"{order_id}:{item_id}:{item_quantity}"
+
+    channel.basic_publish(exchange='exchange', routing_key='order_processing', body=message)
+
+    return f"Order {order_id} for item {item_id} has been processed"
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0')
