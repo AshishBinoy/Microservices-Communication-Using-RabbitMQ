@@ -27,12 +27,14 @@ def delete_stock(item_id):
 
 def callback(ch, method, properties, body):     
     print(f"Received message: {body}")
-    operation, item_id, new_quantity = body.decode('utf-8').split(":")
+    operation = body.decode('utf-8').split(":")[0]
 
     if(operation == 'update'):
+        item_id, new_quantity = body.decode('utf-8').split(":")[1:]
         update_stock(item_id, new_quantity)
     
     elif(operation == 'delete'):
+        item_id = body.decode('utf-8').split(":")[1]
         delete_stock(item_id)
 
     print("Stock updated")
