@@ -44,11 +44,11 @@ def health_check():
 
     return message
 
- @app.route('/read')
- def read():
-     message = "Message to retrieve all records sent"
-     channel.basic_publish(exchange='exchange', routing_key='read', body=message)
-     return message
+@app.route('/read')
+def read():
+    message = "Message to retrieve all records sent"
+    channel.basic_publish(exchange='exchange', routing_key='read', body=message)
+    return message
 
 @app.route('/insert/<item_id>/<item_name>/<item_price>/<item_quantity>')
 def insert(item_id,item_name, item_price, item_quantity):
