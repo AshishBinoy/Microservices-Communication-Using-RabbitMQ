@@ -81,10 +81,11 @@ def update(item_id,quantity):
 @app.route('/process/<order_id>/<item_id>/<item_quantity>')
 def orderprocessing(order_id,item_id,item_quantity):
     message = f"{order_id}:{item_id}:{item_quantity}"
-
-    channel.basic_publish(exchange='exchange', routing_key = 'order processing', body=message)
-
-    return message
+    if connection.is_open and channel.is_open:
+        channel.basic_publish(exchange='exchange', routing_key='order processing', body=message)
+    else:
+        return "Connection to RabbitMQ is not open. Please try again later."
+    return "Order processing message sent"
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0')
