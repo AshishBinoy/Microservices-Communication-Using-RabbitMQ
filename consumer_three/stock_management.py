@@ -6,6 +6,7 @@ import time
 #Creating MySQL Connection 
 mydb = mysql.connector.connect(host = "host.docker.internal", user = "root", password = "root")
 cursor = mydb.cursor() 
+cursor.execute("CREATE DATABASE IF NOT EXISTS Inventory")
 cursor.execute("USE Inventory")
 
 #Creating RabbitMQ Connection
