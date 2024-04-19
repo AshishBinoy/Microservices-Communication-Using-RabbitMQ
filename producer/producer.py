@@ -44,14 +44,7 @@ def health_check():
 
     return message
 
-@app.route('/read')
-def read():
-    message = "Message to retrieve all records sent"
 
-
-    # channel.basic_publish(exchange='exchange', routing_key='read', body=message)
-
-    return message
 
 @app.route('/insert/<item_id>/<item_name>/<item_price>/<item_quantity>')
 def insert(item_id,item_name, item_price, item_quantity):
@@ -68,7 +61,7 @@ def delete(item_id):
 
     channel.basic_publish(exchange='exchange', routing_key='stock management', body=message)
 
-    return message  
+    return message
 
 @app.route('/update/<item_id>/<quantity>')
 def update(item_id,quantity):
@@ -81,10 +74,11 @@ def update(item_id,quantity):
 @app.route('/process/<order_id>/<item_id>/<item_quantity>')
 def orderprocessing(order_id,item_id,item_quantity):
     message = f"{order_id}:{item_id}:{item_quantity}"
-
-    channel.basic_publish(exchange='exchange', routing_key = 'order processing', body=message)
-
-    return message
+    if connection.is_open and channel.is_open:
+        channel.basic_publish(exchange='exchange', routing_key='order processing', body=message)
+    else:
+        return "Connection to RabbitMQ is not open. Please try again later."
+    return "Order processing message sent"
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0')
