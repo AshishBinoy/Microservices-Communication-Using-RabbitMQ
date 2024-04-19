@@ -1,10 +1,12 @@
 import mysql.connector 
 import pika 
+import time
+
 
 
 
 #Creating MySQL Connection 
-mydb = mysql.connector.connect(host = "localhost", user = "root", password = "123456789")
+mydb = mysql.connector.connect(host = "host.docker.internal", user = "root", password = "root")
 cursor = mydb.cursor() 
 cursor.execute("CREATE DATABASE IF NOT EXISTS Inventory")
 cursor.execute("Use Inventory")
@@ -13,7 +15,18 @@ cursor.execute("CREATE TABLE IF NOT EXISTS Items (item_id INT AUTO_INCREMENT PRI
 print("MySQL connection established")
 
 #Creating RabbitMQ Connection
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+
+def connect_to_rabbitmq():
+    connection = None
+    while connection is None:
+        try:
+            connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
+        except pika.exceptions.AMQPConnectionError:
+            print("RabbitMQ is not ready. Waiting to retry...")
+            time.sleep(5)  # wait for 5 seconds before trying to connect again
+    return connection
+
+connection = connect_to_rabbitmq()
 channel = connection.channel()
 channel.exchange_declare(exchange='exchange', exchange_type='direct')
 channel.queue_declare(queue='item creation')

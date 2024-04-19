@@ -1,13 +1,27 @@
 import mysql.connector 
 import pika 
+import time
+
 
 #Creating MySQL Connection 
-mydb = mysql.connector.connect(host = "localhost", user = "root", password = "123456789")
+mydb = mysql.connector.connect(host = "host.docker.internal", user = "root", password = "root")
 cursor = mydb.cursor() 
+cursor.execute("CREATE DATABASE IF NOT EXISTS Inventory")
 cursor.execute("USE Inventory")
 
 #Creating RabbitMQ Connection
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+
+def connect_to_rabbitmq():
+    connection = None
+    while connection is None:
+        try:
+            connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
+        except pika.exceptions.AMQPConnectionError:
+            print("RabbitMQ is not ready. Waiting to retry...")
+            time.sleep(5)  # wait for 5 seconds before trying to connect again
+    return connection
+
+connection = connect_to_rabbitmq()
 channel = connection.channel()
 channel.exchange_declare(exchange='exchange', exchange_type='direct')
 channel.queue_declare(queue='stock management')
@@ -27,12 +41,14 @@ def delete_stock(item_id):
 
 def callback(ch, method, properties, body):     
     print(f"Received message: {body}")
-    operation, item_id, new_quantity = body.decode('utf-8').split(":")
+    operation = body.decode('utf-8').split(":")[0]
 
     if(operation == 'update'):
+        item_id, new_quantity = body.decode('utf-8').split(":")[1:]
         update_stock(item_id, new_quantity)
     
     elif(operation == 'delete'):
+        item_id = body.decode('utf-8').split(":")[1]
         delete_stock(item_id)
 
     print("Stock updated")
