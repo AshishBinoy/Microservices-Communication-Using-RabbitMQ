@@ -45,6 +45,7 @@ def health_check():
     return message
 
 
+
 @app.route('/insert/<item_id>/<item_name>/<item_price>/<item_quantity>')
 def insert(item_id,item_name, item_price, item_quantity):
     message = f"{item_id}:{item_name}:{item_price}:{item_quantity}"
