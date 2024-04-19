@@ -1,9 +1,22 @@
 import flask
 import pika
+import time
 
 app = flask.Flask(__name__)
 
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+
+
+def connect_to_rabbitmq():
+    connection = None
+    while connection is None:
+        try:
+            connection = pika.BlockingConnection(pika.ConnectionParameters(host='rabbitmq'))
+        except pika.exceptions.AMQPConnectionError:
+            print("RabbitMQ is not ready. Waiting to retry...")
+            time.sleep(5)  # wait for 5 seconds before trying to connect again
+    return connection
+
+connection = connect_to_rabbitmq()
 channel = connection.channel() 
 channel.exchange_declare(exchange='exchange', exchange_type='direct')
 
