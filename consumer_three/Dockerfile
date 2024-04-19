@@ -1,9 +1,9 @@
 FROM python:3.8-slim-buster
 
-WORKDIR /stock
+WORKDIR /consumer_three
 
 COPY . .
 
 RUN pip install -r requirements.txt
 
-CMD ["python", "stock_manangement.py"]    
+CMD ["python", "stock_management.py"]

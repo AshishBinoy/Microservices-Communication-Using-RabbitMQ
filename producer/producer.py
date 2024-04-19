@@ -3,8 +3,6 @@ import pika
 
 app = flask.Flask(__name__)
 
-
-# TODO: Add this after RabbitMQ is setup
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel() 
 channel.exchange_declare(exchange='exchange', exchange_type='direct')
@@ -29,26 +27,23 @@ def home():
 def health_check():
     message = "Health check message sent"
 
-    # TODO: Add this after RabbitMQ is setup
     channel.basic_publish(exchange='exchange', routing_key='health check', body=message)
 
     return message
 
-@app.route('/read')
-def read():
-    message = "Message to retrieve all records sent"
+# @app.route('/read')
+# def read():
+#     message = "Message to retrieve all records sent"
 
 
-    # TODO: Add this after RabbitMQ is setup
-    # channel.basic_publish(exchange='exchange', routing_key='read', body=message)
+#     # channel.basic_publish(exchange='exchange', routing_key='read', body=message)
 
-    return message
+#     return message
 
 @app.route('/insert/<item_id>/<item_name>/<item_price>/<item_quantity>')
 def insert(item_id,item_name, item_price, item_quantity):
     message = f"{item_id}:{item_name}:{item_price}:{item_quantity}"
 
-    # TODO: Add this after RabbitMQ is setup
     channel.basic_publish(exchange='exchange', routing_key='item creation', body=message)
 
     return message
@@ -58,7 +53,6 @@ def insert(item_id,item_name, item_price, item_quantity):
 def delete(item_id):
     message = f"delete:{item_id}"
 
-    # TODO: Add this after RabbitMQ is setup
     channel.basic_publish(exchange='exchange', routing_key='stock management', body=message)
 
     return message  
@@ -67,7 +61,6 @@ def delete(item_id):
 def update(item_id,quantity):
     message = f"update:{item_id}:{quantity}"
 
-    # TODO: Add this after RabbitMQ is setup
     channel.basic_publish(exchange='exchange', routing_key='stock management', body=message)
 
     return message 

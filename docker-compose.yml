@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672"  # Expose the port 5672 for RabbitMQ
+      - "15672:15672"
+
+  producer:
+    build: ./producer
+    volumes:
+      - ./producer:/producer
+    ports:
+      - "5000:5000"   # Expose the port 5000 for Flask
+
+  consumer_one:
+    build: ./consumer_one
+    volumes:
+      - ./consumer_one:/consumer_one   # Healthcheck folder was created in the Dockerfile
+    depends_on:
+      - producer
+
+  consumer_two:
+    build: ./consumer_two
+    volumes:
+      - ./consumer_two:/consumer_two # Item folder was created in the Dockerfile
+    depends_on:
+      - producer
+
+  consumer_three:
+    build: ./consumer_three
+    volumes:
+      - ./consumer_three:/consumer_three # Stock folder was created in the Dockerfile
+    depends_on:
+      - producer
+
+  consumer_four:
+    build: ./consumer_four
+    volumes:
+      - ./consumer_four:/consumer_four  # Orderprocessing folder was created in the Dockerfile
+    depends_on:
+      - producer

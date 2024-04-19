@@ -2,7 +2,8 @@ import mysql.connector
 import pika 
 
 #Creating MySQL Connection 
-mydb = mysql.connector.connect(host = "localhost", user = "root", password = "123456789")
+#Creating MySQL Connection 
+mydb = mysql.connector.connect(host = "host.docker.internal", user = "root", password = "root")
 cursor = mydb.cursor() 
 cursor.execute("USE Inventory")
 
