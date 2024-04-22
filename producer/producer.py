@@ -38,11 +38,13 @@ def home():
 
 @app.route('/health_check')
 def health_check():
-    message = "Health check message sent"
-
-    channel.basic_publish(exchange='exchange', routing_key='health check', body=message)
-
-    return message
+    message = "Health check message"
+    try:
+        channel.basic_publish(exchange='exchange', routing_key='health check', body=message)
+        response = "Health check message sent"
+    except pika.exceptions.AMQPConnectionError:
+        response = "RabbitMQ has failed. Please try again later."
+    return response
 
 
 @app.route('/insert/<item_id>/<item_name>/<item_price>/<item_quantity>')
