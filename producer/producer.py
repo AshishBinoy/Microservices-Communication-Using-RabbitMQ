@@ -43,7 +43,7 @@ def health_check():
         channel.basic_publish(exchange='exchange', routing_key='health check', body=message)
         response = "Health check message sent"
     except pika.exceptions.AMQPConnectionError:
-        response = "RabbitMQ has failed. Please try again later."
+        response = "RabbitMQ has Failed. Please Reload Docker."
     return response
 
 
