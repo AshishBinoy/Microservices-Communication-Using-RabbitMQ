@@ -44,33 +44,39 @@ def health_check():
         response = "Health check message sent"
     except pika.exceptions.AMQPConnectionError:
         response = "RabbitMQ has Failed. Please Reload Docker."
+    except Exception as e:
+        response = f"An error occurred: {str(e)}"
     return response
 
 
 @app.route('/insert/<item_id>/<item_name>/<item_price>/<item_quantity>')
-def insert(item_id,item_name, item_price, item_quantity):
-    message = f"{item_id}:{item_name}:{item_price}:{item_quantity}"
-
-    channel.basic_publish(exchange='exchange', routing_key='item creation', body=message)
-
+def insert(item_id, item_name, item_price, item_quantity):
+    try:
+        message = f"{item_id}:{item_name}:{item_price}:{item_quantity}"
+        channel.basic_publish(exchange='exchange', routing_key='item creation', body=message)
+    except Exception as e:
+        return f"An error occurred: {str(e)}", 400
     return message
 
 
 @app.route('/delete/<item_id>/')
 def delete(item_id):
-    message = f"delete:{item_id}"
-
-    channel.basic_publish(exchange='exchange', routing_key='stock management', body=message)
-
+    try:
+        message = f"delete:{item_id}"
+        channel.basic_publish(exchange='exchange', routing_key='stock management', body=message)
+    except Exception as e:
+        return f"An error occurred: {str(e)}", 400
     return message
 
+
 @app.route('/update/<item_id>/<quantity>')
-def update(item_id,quantity):
-    message = f"update:{item_id}:{quantity}"
-
-    channel.basic_publish(exchange='exchange', routing_key='stock management', body=message)
-
-    return message 
+def update(item_id, quantity):
+    try:
+        message = f"update:{item_id}:{quantity}"
+        channel.basic_publish(exchange='exchange', routing_key='stock management', body=message)
+    except Exception as e:
+        return f"An error occurred: {str(e)}", 400
+    return message
 
 @app.route('/process/<order_id>/<item_id>/<item_quantity>')
 def orderprocessing(order_id,item_id,item_quantity):
